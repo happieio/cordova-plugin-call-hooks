@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<plugin xmlns="http://apache.org/cordova/ns/plugins/1.0"
+        xmlns:android="http://schemas.android.com/apk/res/android"
+        id="happie-plugin-cordova-callhooks"
+        version="1.0.0">
+    <name>CallHooksPlugin</name>
+    <description>Cordova Call Hooks Plugin for iOS and Android</description>
+    <license>MIT</license>
+    <keywords>cordova,call,ios,android,ecosystem:cordova</keywords>
+    <js-module src="www/CallHooks.js" name="CallHooks">
+        <clobbers target="CallHooks"/>
+    </js-module>
+    <platform name="android">
+        <config-file target="res/xml/config.xml" parent="/*">
+            <feature name="CallHooks">
+                <param name="android-package" value="io.happie.callhooks.CallHooks"/>
+            </feature>
+        </config-file>
+        <source-file src="src/android/CallHooks.java" target-dir="src/io/happie/callhooks"/>
+    </platform>
+
+<platform name="ios">
+        <config-file target="config.xml" parent="/*">
+            <feature name="CallHooks">
+                <param name="ios-package" value="CallHooks"/>
+            </feature>
+        </config-file>
+        <source-file src="src/ios/CallHooks.swift"/>
+        
+    </platform>
+</plugin>
