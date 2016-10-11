@@ -1,16 +1,25 @@
 import Foundation
+import CoreTelephony
 
 @objc(CallHooks) class CallHooks : CDVPlugin  {
-    func startNativeRaygun(_ command: CDVInvokedUrlCommand) {
-        let params: AnyObject = command.arguments[0] as AnyObject!
-        let user: String = params["user"] as! String
-        let apiKey: String = params["api"] as! String
-        Raygun.sharedReporter(withApiKey: apiKey)
-        (Raygun.sharedReporter() as AnyObject).identify(user)
-    }
-
-    func testCrash(_ command: CDVInvokedUrlCommand) {
-        var crashWithMissingValueInDicitonary = Dictionary<Int,Int>()
-        _ = crashWithMissingValueInDicitonary[1]!
+    func callEnded(_ command: CDVInvokedUrlCommand) {
+        
+        
+        let callCenter:CTCallCenter = CTCallCenter()
+        
+        callCenter.callEventHandler = { (call:CTCall!) in
+            
+            switch call.callState {
+            case CTCallStateConnected:
+                let timeStart = NSDate().timeIntervalSince1970
+                print("CTCallStateConnected")
+                
+            case CTCallStateDisconnected:
+                print("CTCallStateDisconnected")
+                let timeEnd = NSDate().timeIntervalSince1970
+            default:
+                break
+            }
+        }
     }
 }

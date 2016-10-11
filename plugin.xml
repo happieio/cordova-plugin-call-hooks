@@ -26,6 +26,6 @@
             </feature>
         </config-file>
         <source-file src="src/ios/CallHooks.swift"/>
-        
+        <framework src="CoreTelephony.framework"/>
     </platform>
 </plugin>
