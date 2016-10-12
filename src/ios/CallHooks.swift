@@ -6,8 +6,6 @@ import CoreTelephony
         
         let callCenter:CTCallCenter = CTCallCenter()
         
-        let timeStart:Double = NSDate().timeIntervalSince1970
-        
         callCenter.callEventHandler = { (call:CTCall!) in
             switch call.callState {
             
@@ -16,10 +14,7 @@ import CoreTelephony
                 
             case CTCallStateDisconnected:
                 print("CTCallStateDisconnected")
-                let timeEnd:Double = NSDate().timeIntervalSince1970
-                let json = "{ \"start\":" + String(format:"%f", timeStart) + ", \"end\":" + String(format:"%f", timeEnd) + "}"
-                let pluginResult = CDVPluginResult(status: CDVCommandStatus_OK,
-                                                   messageAs: json)
+                let pluginResult = CDVPluginResult(status: CDVCommandStatus_OK, messageAs: "OFFHOOK")
                 self.commandDelegate!.send(pluginResult, callbackId:command.callbackId)
                 
             default:

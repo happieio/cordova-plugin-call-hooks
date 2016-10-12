@@ -3,48 +3,66 @@ package io.happie.callhooks;
 import org.apache.cordova.CallbackContext;
 import org.apache.cordova.CordovaPlugin;
 import org.json.JSONArray;
-import org.json.JSONException;
-import org.json.JSONObject;
+import org.apache.cordova.PluginResult;
 import android.content.Context;
 import android.util.Log;
+import android.telephony.PhoneStateListener;
+import android.telephony.TelephonyManager;
 
 public class CallHooks extends CordovaPlugin {
     private final String pluginName = "CallHooks";
+    CallStateListener listener;
 
     @Override
     public boolean execute(final String action, final JSONArray data, final CallbackContext callbackContext) {
         Log.d(pluginName, pluginName + " called with options: " + data);
-        if (action.equals("startNativeRaygun")) startNativeRaygun(data, callbackContext);
-        else if(action.equals("testCrash")) testCrash();
+        prepareListener();
+        listener.setCallbackContext(callbackContext);
+
         return true;
     }
 
-    private void startNativeRaygun(final JSONArray data, final CallbackContext callbackContext) {
-        final Context context = this.cordova.getActivity().getApplicationContext();
-        this.cordova.getThreadPool().execute(new Runnable() {
-            @Override
-            public void run() {
-                RaygunClient.Init(context);
-                RaygunClient.AttachExceptionHandler();
-                try {
-                    JSONObject obj = data.getJSONObject(0);
-                    String message;
-                    if (obj.has("user")) {
-                        RaygunUserInfo user = new RaygunUserInfo();
-                        user.FullName = obj.getString("user");
-                        RaygunClient.SetUser(user);
-                    }
-                } catch (JSONException e) {
-                    e.printStackTrace();
-                }
-            }
-        });
+    private void prepareListener() {
+        if (listener == null) {
+            listener = new CallStateListener();
+            TelephonyManager TelephonyMgr = (TelephonyManager) cordova.getActivity().getSystemService(Context.TELEPHONY_SERVICE);
+            TelephonyMgr.listen(listener, PhoneStateListener.LISTEN_CALL_STATE);
+        }
+    }
+}
+
+class CallStateListener extends PhoneStateListener {
+
+    private CallbackContext callbackContext;
+
+    public void setCallbackContext(CallbackContext callbackContext) {
+        this.callbackContext = callbackContext;
     }
 
-    private void testCrash() {
-        Integer integers[] = new Integer[Integer.MAX_VALUE];
-        integers[2147483647] = 2147483647+1;
-        testCrash();
-        throw new RuntimeException("This is a crash");
+    public void onCallStateChanged(int state, String incomingNumber) {
+        super.onCallStateChanged(state, incomingNumber);
+
+        if (callbackContext == null) return;
+
+        String msg = "";
+
+        switch (state) {
+            case TelephonyManager.CALL_STATE_IDLE:
+                msg = "IDLE";
+                break;
+
+            case TelephonyManager.CALL_STATE_OFFHOOK:
+                msg = "OFFHOOK";
+                break;
+
+            case TelephonyManager.CALL_STATE_RINGING:
+                msg = "RINGING";
+                break;
+        }
+
+        PluginResult result = new PluginResult(PluginResult.Status.OK, msg);
+        result.setKeepCallback(true);
+
+        callbackContext.sendPluginResult(result);
     }
 }
