@@ -1,5 +1,5 @@
 module.exports = {
-    callEnded: function () {
-        cordova.exec(null, null, "CallHooks", "callEnded", []);
+    callEnded: function (success, fail) {
+        cordova.exec(success, fail, "CallHooks", "callEnded", []);
     }
 };
