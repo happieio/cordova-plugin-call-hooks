@@ -2,11 +2,10 @@ import Foundation
 import CoreTelephony
 
 @objc(CallHooks) class CallHooks : CDVPlugin  {
+    static var callCenter:CTCallCenter = CTCallCenter()
+    
     func callEnded(_ command: CDVInvokedUrlCommand) {
-        
-        let callCenter:CTCallCenter = CTCallCenter()
-        
-        callCenter.callEventHandler = { (call:CTCall!) in
+        CallHooks.callCenter.callEventHandler = { (call:CTCall!) in
             switch call.callState {
             
             case CTCallStateConnected:
