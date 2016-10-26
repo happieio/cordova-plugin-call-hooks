@@ -63,6 +63,8 @@ class CallStateListener extends PhoneStateListener {
         PluginResult result = new PluginResult(PluginResult.Status.OK, msg);
         result.setKeepCallback(true);
 
-        callbackContext.sendPluginResult(result);
+        if(msg.equals("OFFHOOK") || msg.equals("IDLE")){
+            callbackContext.sendPluginResult(result);  
+        }
     }
 }
