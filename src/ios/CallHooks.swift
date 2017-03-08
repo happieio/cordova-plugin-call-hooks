@@ -13,7 +13,7 @@ import CoreTelephony
                 
             case CTCallStateDisconnected:
                 print("CTCallStateDisconnected")
-                let pluginResult = CDVPluginResult(status: CDVCommandStatus_OK, messageAs: "OFFHOOK")
+                let pluginResult = CDVPluginResult(status: CDVCommandStatus_OK, messageAs: "IDLE")
                 self.commandDelegate!.send(pluginResult, callbackId:command.callbackId)
                 
             default:
