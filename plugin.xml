@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <plugin xmlns="http://apache.org/cordova/ns/plugins/1.0"
         xmlns:android="http://schemas.android.com/apk/res/android"
-        id="happie-plugin-cordova-callhooks"
+        id="cordova-plugin-call-hooks"
         version="1.0.0">
     <name>CallHooksPlugin</name>
     <description>Cordova Call Hooks Plugin for iOS and Android</description>
